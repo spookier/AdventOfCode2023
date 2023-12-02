@@ -2,7 +2,7 @@
 #include <string>
 #include <fstream>
 
-int check_values(std::string &combined_digits, std::string &color)
+void check_values(std::string &combined_digits, std::string &color, int &MAX_RED, int &MAX_GREEN, int &MAX_BLUE)
 {
 	// Does the value fit in the context of the question ?
 	// [ 12 red cubes, 13 green cubes, and 14 blue cubes ]
@@ -15,36 +15,26 @@ int check_values(std::string &combined_digits, std::string &color)
 		if (color == "R")
 		{
 			digit_to_int = std::stoi(combined_digits);
-			if (digit_to_int > 12)
-			{
-				return(-1);
-			}
-			// if(MAX_RED < digit_to_int)
-			// 	MAX_RED = digit_to_int;
+
+			if (MAX_RED < digit_to_int)
+				MAX_RED = digit_to_int;
 		}
 		else if (color == "G")
 		{
 			digit_to_int = std::stoi(combined_digits);
-			if (digit_to_int > 13)
-			{
-				return(-1);
-			}
-			// if(MAX_GREEN < digit_to_int)
-			// 	MAX_GREEN = digit_to_int;
+
+			if (MAX_GREEN < digit_to_int)
+				MAX_GREEN = digit_to_int;
 		}
 		else if (color == "B")
 		{
 			digit_to_int = std::stoi(combined_digits);
-			if (digit_to_int > 14)
-			{
-				return(-1);
-			}
-			// if(MAX_BLUE < digit_to_int)
-			// 	MAX_BLUE = digit_to_int;
+
+			if (MAX_BLUE < digit_to_int)
+				MAX_BLUE = digit_to_int;
 		}
-		return(0);
 	}
-	return(-1);
+
 }
 
 std::string is_color(std::string &line, size_t i)
@@ -59,7 +49,7 @@ std::string is_color(std::string &line, size_t i)
 		return ("X");
 }
 
-int find_possible_game(std::string &line, int &sum_of_IDs)
+ssize_t find_possible_game(std::string &line, ssize_t &res)
 {
 	size_t 		i;
 	std::string color;
@@ -72,9 +62,9 @@ int find_possible_game(std::string &line, int &sum_of_IDs)
 	std::string id_digit2;
 	std::string combined_id;
 
-	// int MAX_RED		= 0;
-	// int MAX_GREEN	= 0;
-	// int MAX_BLUE		= 0;
+	int MAX_RED		= 0;
+	int MAX_GREEN	= 0;
+	int MAX_BLUE	= 0;
 
 
 	// get ID for the entire subset
@@ -144,17 +134,7 @@ int find_possible_game(std::string &line, int &sum_of_IDs)
 			exit(-1);
 		}
 
-		if (check_values(combined_digits, color) == -1)
-		{
-			std::cout << "[KO] Game " << combined_id << " is impossible !" << std::endl;
-			return (-1);
-		}
-
-		// if (check_values(combined_digits, color, MAX_RED, MAX_GREEN, MAX_BLUE) == -1)
-		// {
-		// 	std::cout << "[KO] Game " << combined_id << " is impossible !" << std::endl;
-		// 	return (-1);
-		// }
+		check_values(combined_digits, color, MAX_RED, MAX_GREEN, MAX_BLUE);
 
 		i++;
 	}
@@ -163,11 +143,8 @@ int find_possible_game(std::string &line, int &sum_of_IDs)
 
 
 	// If arrives until here it means the game would have been possible, so add the ID
-	sum_of_IDs += std::stoi(combined_id);
-
-	//std::cout << MAX_RED << "|" << MAX_GREEN << "|" << MAX_BLUE << "|" <<std::endl;
-
-
+	std::cout << MAX_RED << " | " << MAX_GREEN << " | " << MAX_BLUE << std::endl;;
+	res += MAX_RED * MAX_BLUE * MAX_GREEN;
 	return(0);
 }
 
@@ -176,18 +153,17 @@ int main()
 {
 	std::ifstream file;
 	std::string line;
-	int sum_of_IDs;
+	ssize_t res;
 	
-	sum_of_IDs = 0;
+	res = 0;
 	file.open("input.txt");
 	if (file.is_open())
 	{
 		while (std::getline(file, line))
 		{
-			find_possible_game(line, sum_of_IDs);
+			find_possible_game(line, res);
 		}
-		
-		std::cout << "[END] sum of IDs = " << sum_of_IDs + 100 << std::endl;
+		std::cout << "RES: " << res << std::endl;
 		return (0);
 	}
 	else
