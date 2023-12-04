@@ -5,7 +5,7 @@
 This repo contains my personal solutions for the [Advent of Code 2023](https://adventofcode.com/2023) challenge
 <br>
 <br>
-**This year I've decided to infuse my brain with a dose of scarlet rot straight from General Radahn himself by using C++ to solve these challenges**
+**This year I've decided to infuse my brain with a dose of scarlet rot straight from General Radahn himself by learning and using C++ as I go to solve these challenges**
 
 ## About Advent of Code
 
